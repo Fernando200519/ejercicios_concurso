@@ -5,42 +5,65 @@ import java.util.Scanner;
 public class ejercicio_H {
     public static void main(String[] args) {
         Scanner entrada = new Scanner(System.in);
-
-        System.out.print("Ingrese la cantidad de casos de prueba: ");
+        
         int T = entrada.nextInt();
+        entrada.nextLine();  // Limpiar el salto de línea
 
-        String[] casos = new String[T];
+        for (int t = 0; t < T; t++) {
+            String S = entrada.nextLine();
+            int N = S.length();
 
-        //Limpiar buffer 
-        entrada.nextLine();
+            int R = 0;
+            int B = 0;
 
-        for(int i = 0; i < T; i++){
-            System.out.print("Ingrese el caso "+(i+1)+": ");
-            casos[i] = entrada.nextLine();
+            int resultado = -1;
+
+            // Probar cada posible punto de corte
+            for (int corte = 0; corte < N; corte++) {
+                // Actualizar conteos de colores según el corte
+                if (corte > 0) {
+                    char carta = S.charAt(corte - 1);
+                    if (carta == 'R') {
+                        R++;
+                    } else {
+                        B++;
+                    }
+                }
+
+                // Comprobar si al voltear las cartas hay más rojas que azules
+                boolean aliceGana = false;
+
+                // Contadores para la parte restante de la baraja
+                int rojasRestantes = 0;
+                int azulesRestantes = 0;
+
+                // Contar cartas restantes después del corte
+                for (int i = 0; i < N; i++) {
+                    char carta = S.charAt((i + corte) % N);
+                    if (carta == 'R') {
+                        rojasRestantes++;
+                    } else {
+                        azulesRestantes++;
+                    }
+
+                    // Si en cualquier momento hay más rojas, Alice gana
+                    if (rojasRestantes > azulesRestantes) {
+                        aliceGana = true;
+                        break;
+                    }
+                }
+
+                // Si Bob puede ganar, actualiza el resultado
+                if (!aliceGana) {
+                    resultado = corte;
+                    break; // Encontramos el corte más pequeño
+                }
+            }
+
+            // Imprimir el resultado para el caso de prueba actual
+            System.out.println(resultado);
         }
-
-        for(int i = 0; i < T; i++){
-            System.out.println(casos[i]);
-        }
-
-
-
-
-
-
-
-
-
-
-
 
         entrada.close();
     }
-
-
-
-
-
-
-
 }
